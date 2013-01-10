@@ -57,13 +57,13 @@ amplify.request = function( resourceId, data, callback ) {
 		status = status || "success";
 		amplify.publish( "request.success", settings, data, status );
 		amplify.publish( "request.complete", settings, data, status );
-		success( data, status );
+		success.call(this, data, status );
 	});
 	settings.error = async( function( data, status ) {
 		status = status || "error";
 		amplify.publish( "request.error", settings, data, status );
 		amplify.publish( "request.complete", settings, data, status );
-		error( data, status );
+		error.call(this, data, status );
 	});
 
 	if ( !resource ) {
@@ -144,10 +144,10 @@ amplify.request.types.ajax = function( defnSettings ) {
 					handleResponse( null, "abort" );
 				},
 				success: function( data, status ) {
-					settings.success( data, status );
+					settings.success.call(this, data, status );
 				},
 				error: function( data, status ) {
-					settings.error( data, status );
+					settings.error.call(this, data, status );
 				}
 			};
 
@@ -170,9 +170,9 @@ amplify.request.types.ajax = function( defnSettings ) {
 				status = "abort";
 			}
 			if ( /timeout|error|abort/.test( status ) ) {
-				ampXHR.error( data, status );
+				ampXHR.error.call(this, data, status );
 			} else {
-				ampXHR.success( data, status );
+				ampXHR.success.call(this, data, status );
 			}
 			// avoid handling a response multiple times
 			// this can happen if a request is aborted
